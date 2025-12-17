@@ -10,11 +10,6 @@
                 "-o", "./",
                 "-t", "highres"
             ],
-            "env": {
-                "GELBOORU_API_KEY": "0fcc13599e7c211a8a81590056e13e6ca517ee7699f08aa79ce306dc99bd24c6",
-                "GELBOORU_USER_ID": "1475899",
-                "LD_LIBRARY_PATH": "/home/node/.xmake/packages/o/objfw/1.4.1/a767fb3ebd2f438ab7f10463f68d9b51/lib/"
-            },
             "cwd": "${workspaceRoot}",
             "disableASLR": false,
             "initCommands": [
