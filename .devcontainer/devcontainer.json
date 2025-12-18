@@ -28,7 +28,13 @@
 				"llvm-vs-code-extensions.vscode-clangd"
 			]
 		}
-	}
+	},
+	"runArgs": [
+    	"--network=host",
+    	"-e", "DISPLAY",
+    	"-e", "XAUTHORITY=/tmp/.Xauthority",
+    	"-v", "${env:HOME}/.Xauthority:/tmp/.Xauthority:ro"
+  	]
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},

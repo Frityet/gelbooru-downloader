@@ -6,8 +6,8 @@
 #define nillable _Nullable
 #define nonnil _Nonnull
 #define noescape [[clang::noescape]]
-#define strong __strong
-#define weak __weak
+#define strongptr __strong
+#define weakptr __weak
 #define unretained __unsafe_unretained
 #define blockref __block
 

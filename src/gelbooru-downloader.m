@@ -154,19 +154,19 @@ static constexpr int PAGE_LIMIT = 100;
                 }];
             }];
 
-        return [[Future all:$assert_nonnil(responseFutures)] bind:^id(OFArray<ImageInfo *> *infos) {
+        return [[Future all: $assert_nonnil(responseFutures)] bind:^id(OFArray<ImageInfo *> *infos) {
             size_t downloaded = infos.count;
             size_t newRemaining = remaining > downloaded ? remaining - downloaded : 0;
 
             if (newRemaining == 0 || downloaded == 0)
                 return [Future resolved:infos];
 
-            return [[self downloadPage:page + 1
-                              remaining:newRemaining
-                                   tags:tags
-                              outputDir:outputDir
-                                 apiKey:apiKey
-                                 userID:userID] map:^id(OFArray<ImageInfo *> *moreInfos) {
+            return [[self  downloadPage: page + 1
+                              remaining: newRemaining
+                                   tags: tags
+                              outputDir: outputDir
+                                 apiKey: apiKey
+                                 userID: userID] map:^id(OFArray<ImageInfo *> *moreInfos) {
                 OFMutableArray<ImageInfo *> *all = [OFMutableArray array];
                 [all addObjectsFromArray:infos];
                 [all addObjectsFromArray:moreInfos];

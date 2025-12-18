@@ -90,32 +90,25 @@
     return self;
 }
 
-+ (instancetype)requestWithIRI:(OFIRI *)url
-                            to:(OFIRI *)destination
-                   rateLimiter:(RequestRateLimiter *nillable)rateLimiter
-                   progressBar:(ProgressBar *nillable)progressBar
++ (instancetype)requestWithIRI:(OFIRI *)url to:(OFIRI *)destination rateLimiter:(RequestRateLimiter *nillable)rateLimiter progressBar:(ProgressBar *nillable)progressBar
 {
-    return [[self alloc] initWithIRI:url to:destination rateLimiter:rateLimiter progressBar:progressBar];
+    return [[self alloc] initWithIRI: url to: destination rateLimiter: rateLimiter progressBar: progressBar];
 }
 
-- (void)client:(OFHTTPClient *nonnil)client
-didPerformRequest:(OFHTTPRequest *nonnil)request
-      response:(OFHTTPResponse *nillable)response
-     exception:(id nillable)exception
+- (void)client:(OFHTTPClient *nonnil)client didPerformRequest:(OFHTTPRequest *nonnil)request response:(OFHTTPResponse *nillable)response exception:(id nillable)exception
 {
     if (exception) {
-        [self finishWithException:$cast(OFException, exception)];
+        [self finishWithException: $cast(OFException, exception)];
         return;
     }
 
     if (not response) {
-        [self finishWithException:[OFInvalidArgumentException exception]];
+        [self finishWithException: [OFInvalidArgumentException exception]];
         return;
     }
 
     if (response.statusCode != 200) {
-        [self finishWithException:[OFHTTPRequestFailedException exceptionWithRequest:request
-                                                                            response:(OFHTTPResponse *)response]];
+        [self finishWithException: [OFHTTPRequestFailedException exceptionWithRequest: request response: (OFHTTPResponse *)response]];
         return;
     }
 
@@ -125,30 +118,25 @@ didPerformRequest:(OFHTTPRequest *nonnil)request
         if (progress) [progress setExpectedBytes: expectedBytes forLabel: label];
     }
 
-    [response asyncReadIntoBuffer:buffer
-                           length:sizeof(buffer)
-                          handler:^bool(OFStream *nonnil stream, void *data, size_t len, id nillable readException) {
+    [response asyncReadIntoBuffer: buffer length: sizeof(buffer) handler: ^(OFStream *stream, void *data, size_t len, id nillable readException) {
         if (readException) {
-            return [self finishWithException:$cast(OFException, readException)];
+            return [self finishWithException: $cast(OFException, readException)];
         }
 
         if (len > 0) {
             size_t written = fwrite(data, 1, len, fileHandle);
             if (written != len) {
-                auto ex = [OFWriteFailedException exceptionWithObject:_destination
-                                                      requestedLength:len
-                                                         bytesWritten:written
-                                                               errNo:errno];
-                return [self finishWithException:ex];
+                auto ex = [OFWriteFailedException exceptionWithObject: _destination requestedLength: len bytesWritten: written errNo: errno];
+                return [self finishWithException: ex];
             }
 
-            if (progress) [progress addReceivedBytes:len forLabel:label];
+            if (progress) [progress addReceivedBytes: len forLabel: label];
         }
 
         if (stream.isAtEndOfStream) {
             [self closeFileIfOpen];
-            auto attrs = [OFFileManager.defaultManager attributesOfItemAtIRI:_destination];
-            auto info = [ImageInfo infoWithIRI:_request.IRI width:0 height:0 fileSize:attrs.fileSize];
+            auto attrs = [OFFileManager.defaultManager attributesOfItemAtIRI: _destination];
+            auto info = [ImageInfo infoWithIRI: _request.IRI width: 0 height: 0 fileSize: attrs.fileSize];
             return [self finishWithInfo:info];
         }
 
